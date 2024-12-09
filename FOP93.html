@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <title>Formulário de Atendimento</title>
+    <style>
+        .form-container {
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            color: #fff;
+            background-color: #003366;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .icon-label {
+            display: flex;
+            align-items: center;
+        }
+        .icon-label img {
+            margin-left: 8px;
+            cursor: pointer;
+        }
+        .btn-toolbar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .horizontal-line {
+            border-top: 2px solid #003366;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Carregar o JSON como um arquivo JavaScript -->
+    <script src="codigo_evento_data.js"></script>
+    <script src="municipios.js"></script>
+    <script src="limitrofe.js"></script>
+
+    <div class="container">
+        <div class="btn-toolbar mb-3">
+            <button type="button" class="btn btn-primary mr-2" id="novoForm">Novo</button>
+            <button type="button" class="btn btn-success mr-2" id="salvarForm">Salvar</button>
+            <button type="button" class="btn btn-danger mr-2" id="limparForm">Limpar</button>
+            <button type="button" class="btn btn-secondary" id="exportarPdf"> Exportar PDF</button>
+            <button type="button" class="btn btn-primary" id="exportarCsv"> Exportar CSV</button>
+
+        </div>
+
+        <div class="form-container">
+            <h2>Formulário de Atendimento</h2>
+            <form id="form_atendimento">
+                <!-- Bloco inicial já existente -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="protocolo_atendimento">Protocolo de Atendimento (Benner)</label>
+                            <input type="text" name="protocolo_atendimento" id="protocolo_atendimento" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="uar_nar">UAR / NAR</label>
+                            <input type="text" name="uar_nar" id="uar_nar" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="chave">Chave</label>
+                        <div class="input-group">
+                            <input type="number" name="chave" id="chave" class="form-control" min="1" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <img src="https://img.icons8.com/ios-filled/50/000000/search.png" alt="Buscar" width="20" id="buscarChave">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="nup">NUP</label>
+                            <input type="text" name="nup" id="nup" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="matricula_funcional">Matrícula Funcional</label>
+                            <input type="text" name="matricula_funcional" id="matricula_funcional" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="responsavel_uar">Responsável UAR</label>
+                            <input type="text" name="responsavel_uar" id="responsavel_uar" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nome_beneficiario">Nome do Beneficiário</label>
+                            <input type="text" name="nome_beneficiario" id="nome_beneficiario" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="cpf">CPF</label>
+                            <input type="text" name="cpf" id="cpf" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="cib">CIB</label>
+                            <input type="text" name="cib" id="cib" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="data_nascimento">Data de Nascimento</label>
+                            <input type="date" name="data_nascimento" id="data_nascimento" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nome_titular">Nome do Titular</label>
+                            <input type="text" name="nome_titular" id="nome_titular" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="telefone">Telefone</label>
+                            <input type="text" name="telefone" id="telefone" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" name="email" id="email" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="origem_demanda">Origem da Demanda</label>
+                            <select id="origem_demanda" class="form-control">
+                                <option value="">Selecione</option>
+                                <option value="assistencial">ASSISTENCIAL</option>
+                                <option value="liminar">LIMINAR</option>
+                                <option value="nip">NIP</option>
+                                <option value="ouvidoria">OUVIDORIA</option>
+                                <option value="rede indireta">REDE INDIRETA</option>
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segundo bloco -->
+                <div class="section-title">Informações da Solicitação de Atendimento</div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="uf">UF</label>
+                            <select id="uf" class="form-control">
+                                <option value="">Selecione o UF</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        
+                        <div class="form-group">
+                            <label for="municipio">Município</label>
+                            <select id="municipio" class="form-control">
+                                <option value="">Selecione o município</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="regiao_saude">Região da Saúde</label>
+                            <input type="text" name="regiao_saude" id="regiao_saude" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="codigo_ibge">Código IBGE</label>
+                            <input type="text" name="codigo_ibge" id="codigo_ibge" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tipo_atendimento">Tipo de Atendimento - conforme resolução normativa da ANS</label>
+                            <select id="tipoAtendimento" class="form-control">
+                                <option value="">Selecione uma opção</option>
+                                <option value="I">I - consulta básica - pediatria, clínica médica, cirurgia geral, ginecologia e obstetrícia</option>
+                                <option value="II">II - consulta nas demais especialidades médicas</option>
+                                <option value="III">III - consulta/sessão com fonoaudiólogo</option>
+                                <option value="IV">IV - consulta/sessão com nutricionista</option>
+                                <option value="V">V - consulta/sessão com psicólogo</option>
+                                <option value="VI">VI - consulta/sessão com terapeuta ocupacional</option>
+                                <option value="VII">VII - consulta/sessão com fisioterapeuta</option>
+                                <option value="VIII">VIII - consulta/sessão com enfermeiro obstetra ou obstetriz</option>
+                                <option value="IX">IX - consulta e procedimentos realizados em consultório/clínica com cirurgião-dentista</option>
+                                <option value="X">X - serviços de diagnóstico por laboratório de análises clínicas em regime ambulatorial</option>
+                                <option value="XI">XI - demais serviços de diagnóstico e terapia em regime ambulatorial</option>
+                                <option value="XII">XII - Procedimentos de alta complexidade - PAC</option>
+                                <option value="XIII">XIII - atendimento em regime de internação eletiva</option>
+                                <option value="XIV">XIV - atendimento em regime de hospital-dia</option>
+                                <option value="XV">XV - tratamentos antineoplásicos domiciliares de uso oral, incluindo medicamento para o controle de efeitos adversos relacionados ao tratamento e adjuvantes: fornecimento poderá ser realizado de maneira fracionada por ciclo</option>
+                                <option value="XVI">XVI - tratamentos antineoplásicos ambulatoriais e domiciliares de uso oral, procedimentos radioterápicos para tratamento de câncer e hemoterapia, na qualidade de procedimentos cuja necessidade esteja relacionada à continuidade da assistência</option>
+                                <option value="Urgência e Emergência">Urgência e Emergência: imediato</option>
+                            </select>                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="especialidade">Especialidade</label>
+                            <select id="especialidadeMedica" class="form-control">
+                                <option value="">Selecione uma especialidade</option>
+                                <option value="Alergologia e Imunologia">Alergologia e Imunologia</option>
+                                <option value="Anestesiologia">Anestesiologia</option>
+                                <option value="Angiologia">Angiologia</option>
+                                <option value="Cardiologia">Cardiologia</option>
+                                <option value="Cirurgia Cardiovascular">Cirurgia Cardiovascular</option>
+                                <option value="Cirurgia da Mão">Cirurgia da Mão</option>
+                                <option value="Cirurgia de Cabeça e Pescoço">Cirurgia de Cabeça e Pescoço</option>
+                                <option value="Cirurgia do Aparelho Digestivo">Cirurgia do Aparelho Digestivo</option>
+                                <option value="Cirurgia Geral">Cirurgia Geral</option>
+                                <option value="Cirurgia Oncológica">Cirurgia Oncológica</option>
+                                <option value="Cirurgia Pediátrica">Cirurgia Pediátrica</option>
+                                <option value="Cirurgia Plástica">Cirurgia Plástica</option>
+                                <option value="Cirurgia Torácica">Cirurgia Torácica</option>
+                                <option value="Cirurgia Vascular">Cirurgia Vascular</option>
+                                <option value="Clínica Médica">Clínica Médica</option>
+                                <option value="Coloproctologia">Coloproctologia</option>
+                                <option value="Dermatologia">Dermatologia</option>
+                                <option value="Endocrinologia e Metabologia">Endocrinologia e Metabologia</option>
+                                <option value="Endoscopia">Endoscopia</option>
+                                <option value="Gastroenterologia">Gastroenterologia</option>
+                                <option value="Genética Médica">Genética Médica</option>
+                                <option value="Geriatria">Geriatria</option>
+                                <option value="Ginecologia e Obstetrícia">Ginecologia e Obstetrícia</option>
+                                <option value="Hematologia e Hemoterapia">Hematologia e Hemoterapia</option>
+                                <option value="Homeopatia">Homeopatia</option>
+                                <option value="Infectologia">Infectologia</option>
+                                <option value="Mastologia">Mastologia</option>
+                                <option value="Medicina de Família e Comunidade">Medicina de Família e Comunidade</option>
+                                <option value="Medicina do Trabalho">Medicina do Trabalho</option>
+                                <option value="Medicina do Tráfego">Medicina do Tráfego</option>
+                                <option value="Medicina Esportiva">Medicina Esportiva</option>
+                                <option value="Medicina Física e Reabilitação">Medicina Física e Reabilitação</option>
+                                <option value="Medicina Intensiva">Medicina Intensiva</option>
+                                <option value="Medicina Legal e Perícia Médica">Medicina Legal e Perícia Médica</option>
+                                <option value="Medicina Nuclear">Medicina Nuclear</option>
+                                <option value="Medicina Preventiva e Social">Medicina Preventiva e Social</option>
+                                <option value="Nefrologia">Nefrologia</option>
+                                <option value="Neurocirurgia">Neurocirurgia</option>
+                                <option value="Neurologia">Neurologia</option>
+                                <option value="Nutrologia">Nutrologia</option>
+                                <option value="Oftalmologia">Oftalmologia</option>
+                                <option value="Oncologia Clínica">Oncologia Clínica</option>
+                                <option value="Ortopedia e Traumatologia">Ortopedia e Traumatologia</option>
+                                <option value="Otorrinolaringologia">Otorrinolaringologia</option>
+                                <option value="Patologia">Patologia</option>
+                                <option value="Patologia Clínica/Medicina Laboratorial">Patologia Clínica/Medicina Laboratorial</option>
+                                <option value="Pediatria">Pediatria</option>
+                                <option value="Pneumologia">Pneumologia</option>
+                                <option value="Psiquiatria">Psiquiatria</option>
+                                <option value="Radiologia e Diagnóstico por Imagem">Radiologia e Diagnóstico por Imagem</option>
+                                <option value="Radioterapia">Radioterapia</option>
+                                <option value="Reumatologia">Reumatologia</option>
+                                <option value="Urologia">Urologia</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="codigo_evento">1 - Evento</label>
+                            <input type="text"  id="codigo_evento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento">1 - Procedimento</label>
+                            <input type="text" id="procedimento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade">Quantidade</label>
+                            <input type="number" name="quantidade" id="quantidade" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>1 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau1">1.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau1" id="descricao_grau1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau2">1.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau2" id="descricao_grau2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau3">1.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau3" id="descricao_grau3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau4">1.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau4" id="descricao_grau4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia1" id="valor_referencia1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia2" id="valor_referencia2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia3" id="valor_referencia3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia4" id="valor_referencia4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+                <div class="horizontal-line"></div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_2">2 - Evento</label>
+                            <input type="text" name="evento_2" id="evento_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_2">2 - Procedimento</label>
+                            <input type="text" name="procedimento_2" id="procedimento_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_2">Quantidade</label>
+                            <input type="number" name="quantidade_2" id="quantidade_2" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>2 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau2_1">2.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau2_1" id="descricao_grau2_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau2_2">2.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau2_2" id="descricao_grau2_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau2_3">2.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau2_3" id="descricao_grau2_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau2_4">2.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau2_4" id="descricao_grau2_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_2_1" id="valor_referencia_2_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_2_2" id="valor_referencia_2_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_2_3" id="valor_referencia_2_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_2_4" id="valor_referencia_2_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+
+                <!-- Seção 3 -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_3">3 - Evento</label>
+                            <input type="text" name="evento_3" id="evento_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_3">3 - Procedimento</label>
+                            <input type="text" name="procedimento_3" id="procedimento_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_3">Quantidade</label>
+                            <input type="number" name="quantidade_3" id="quantidade_3" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>3 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau3_1">3.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau3_1" id="descricao_grau3_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau3_2">3.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau3_2" id="descricao_grau3_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau3_3">3.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau3_3" id="descricao_grau3_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau3_4">3.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau3_4" id="descricao_grau3_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_3_1" id="valor_referencia_3_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_3_2" id="valor_referencia_3_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_3_3" id="valor_referencia_3_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_3_4" id="valor_referencia_3_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line"></div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_4">4 - Evento</label>
+                            <input type="text" name="evento_4" id="evento_4" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_4">4 - Procedimento</label>
+                            <input type="text" name="procedimento_4" id="procedimento_4" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_4">Quantidade</label>
+                            <input type="number" name="quantidade_4" id="quantidade_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>4 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau4_1">4.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau4_1" id="descricao_grau4_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau4_2">4.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau4_2" id="descricao_grau4_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau4_3">4.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau4_3" id="descricao_grau4_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau4_4">4.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau4_4" id="descricao_grau4_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_4_1" id="valor_referencia_4_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_4_2" id="valor_referencia_4_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_4_3" id="valor_referencia_4_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_4_4" id="valor_referencia_4_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line"></div>
+                
+                <!-- Seção 5 -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_5">5 - Evento</label>
+                            <input type="text" name="evento_5" id="evento_5" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_5">5 - Procedimento</label>
+                            <input type="text" name="procedimento_5" id="procedimento_5" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_5">Quantidade</label>
+                            <input type="number" name="quantidade_5" id="quantidade_5" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>5 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau5_1">5.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau5_1" id="descricao_grau5_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau5_2">5.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau5_2" id="descricao_grau5_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau5_3">5.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau5_3" id="descricao_grau5_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau5_4">5.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau5_4" id="descricao_grau5_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_5_1" id="valor_referencia_5_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_5_2" id="valor_referencia_5_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_5_3" id="valor_referencia_5_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_5_4" id="valor_referencia_5_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line"></div>
+                
+                <!-- Seção 6 -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_6">6 - Evento</label>
+                            <input type="text" name="evento_6" id="evento_6" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_6">6 - Procedimento</label>
+                            <input type="text" name="procedimento_6" id="procedimento_6" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_6">Quantidade</label>
+                            <input type="number" name="quantidade_6" id="quantidade_6" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>6 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau6_1">6.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau6_1" id="descricao_grau6_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau6_2">6.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau6_2" id="descricao_grau6_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau6_3">6.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau6_3" id="descricao_grau6_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau6_4">6.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau6_4" id="descricao_grau6_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_6_1" id="valor_referencia_6_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_6_2" id="valor_referencia_6_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_6_3" id="valor_referencia_6_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_6_4" id="valor_referencia_6_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line"> </div>
+                <!-- Seção 7 -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_7">7 - Evento</label>
+                            <input type="text" name="evento_7" id="evento_7" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_7">7 - Procedimento</label>
+                            <input type="text" name="procedimento_7" id="procedimento_7" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_7">Quantidade</label>
+                            <input type="number" name="quantidade_7" id="quantidade_7" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>7 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau7_1">7.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau7_1" id="descricao_grau7_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau7_2">7.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau7_2" id="descricao_grau7_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau7_3">7.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau7_3" id="descricao_grau7_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau7_4">7.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau7_4" id="descricao_grau7_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_7_1" id="valor_referencia_7_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_7_2" id="valor_referencia_7_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_7_3" id="valor_referencia_7_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_7_4" id="valor_referencia_7_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+
+                <!-- Seção 8 -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="evento_8">8 - Evento</label>
+                            <input type="text" name="evento_8" id="evento_8" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="procedimento_8">8 - Procedimento</label>
+                            <input type="text" name="procedimento_8" id="procedimento_8" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="quantidade_8">Quantidade</label>
+                            <input type="number" name="quantidade_8" id="quantidade_8" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>8 - Grau:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau8_1">8.1 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau8_1" id="descricao_grau8_1" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau8_2">8.2 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau8_2" id="descricao_grau8_2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau8_3">8.3 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau8_3" id="descricao_grau8_3" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="descricao_grau8_4">8.4 - Descrição Grau</label>
+                            <input type="text" name="descricao_grau8_4" id="descricao_grau8_4" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Valor referência estado unitário:</label>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_8_1" id="valor_referencia_8_1" class="form-control" placeholder="Campo 1">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_8_2" id="valor_referencia_8_2" class="form-control" placeholder="Campo 2">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_8_3" id="valor_referencia_8_3" class="form-control" placeholder="Campo 3">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <input type="text" name="valor_referencia_8_4" id="valor_referencia_8_4" class="form-control" placeholder="Campo 4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+                                
+                <div class="section-title">INFORMAÇÕES DA REALIZAÇÃO DO ATENDIMENTO</div>
+                <div class="horizontal-line"></div>
+
+                <!-- Campos do terceiro bloco -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="uf_atendimento">UF de Atendimento</label>
+                            <input type="text" name="uf_atendimento" id="uf_atendimento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="municipio_atendimento">Município de Atendimento</label>
+                            <input type="text" name="municipio_atendimento" id="municipio_atendimento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="modalidade_atendimento">Modalidade de Atendimento</label>
+                            <select id="modalidade_atendimento" name="modalidade_atendimento" class="form-control">
+                                <option value="">Selecionar a modalidade </option>
+                                <option value="1">1 - Encaminhada para Rede Credenciada</option>
+                                <option value="2">2 - Contratação Direta</option>
+                                <option value="3">3 - TFD para rede credenciada</option>
+                                <option value="4">4 - TFD para rede não credenciada</option>
+                                <option value="5">5 - Reembolso Integral</option>
+                                <option value="6">6 - Cancelada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tipo_atendimento">Tipo de Atendimento</label>
+                            <select id="tipoAtendimento" name="tipoAtendimento" class="form-control">
+                                <option value="">Selecionar o atendimento </option>
+                                <option value="Ambulatorial">Ambulatorial</option>
+                                <option value="Fornecedor">Fornecedor</option>
+                                <option value="Home Care">Home Care</option>
+                                <option value="InternacaoHospitalar">Internação Hospitalar</option>
+                                <option value="InternacaoPsiquiatrica">Internação Psiquiátrica</option>
+                                <option value="Odontologia">Odontologia</option>
+                                <option value="ProntoSocorro">Pronto Socorro</option>
+                                <option value="Remocao">Remoção</option>
+                            </select>
+                                                    </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="situacao_atendimento">Situação de Atendimento</label>
+                            <select id="naturezaAtendimento" name="naturezaAtendimento" class="form-control">
+                                <option value="">Selecionar a natureza </option>
+                                <option value="Eletivo">Eletivo</option>
+                                <option value="UrgenciaARealizar">Urgência - Atendimento a Realizar</option>
+                                <option value="UrgenciaRealizado">Urgência - Atendimento Já Realizado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+                <div class="section-title">DADOS DO ADIANTAMENTO</div>
+                <div class="horizontal-line"></div>
+
+                <!-- Campos do bloco "Dados do Adiantamento" -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="necessario_adiantamento">Necessário o Adiantamento de Valores?</label>
+                            <select name="necessario_adiantamento" id="necessario_adiantamento" class="form-control">
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="situacao_adiantamento">Situação</label>
+                            <input type="text" name="situacao_adiantamento" id="situacao_adiantamento" class="form-control">
+                        </div>
+                    
+                    
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="valor_adiantado">Valor Adiantado</label>
+                            <input type="number" step="0.01" name="valor_adiantado" id="valor_adiantado" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="data_adiantamento">Data do Adiantamento do Crédito</label>
+                            <input type="date" name="data_adiantamento" id="data_adiantamento" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="valor_devolvido">Valor Devolvido</label>
+                            <input type="number" step="0.01" name="valor_devolvido" id="valor_devolvido" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="data_limite_prestacao">Data Limite da Prestação de Contas</label>
+                            <input type="date" name="data_limite_prestacao" id="data_limite_prestacao" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+                <div class="section-title">INFORMAÇÕES DOS MUNICÍPIOS LIMÍTROFES AO MUNICÍPIO DE ORIGEM</div>
+                <div class="horizontal-line"></div>
+
+                <!-- Campos do bloco "INFORMAÇÕES DOS MUNICÍPIOS LIMÍTROFES AO MUNICÍPIO DE ORIGEM" -->
+                <div class="form-group">
+                    <div id="limitrofesContainer" class="row">
+                        <!-- Cada linha contém três campos para exibir em três colunas -->
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 1</label><input type="text" id="limite1" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 8</label><input type="text" id="limite8" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 15</label><input type="text" id="limite15" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 2</label><input type="text" id="limite2" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 9</label><input type="text" id="limite9" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 16</label><input type="text" id="limite16" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 3</label><input type="text" id="limite3" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 10</label><input type="text" id="limite10" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 17</label><input type="text" id="limite17" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 4</label><input type="text" id="limite4" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 11</label><input type="text" id="limite11" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 18</label><input type="text" id="limite18" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 5</label><input type="text" id="limite5" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 12</label><input type="text" id="limite12" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 19</label><input type="text" id="limite19" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 6</label><input type="text" id="limite6" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 13</label><input type="text" id="limite13" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 20</label><input type="text" id="limite20" class="form-control" readonly></div>
+                
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 7</label><input type="text" id="limite7" class="form-control" readonly></div>
+                        <div class="col-md-4 mb-1"><label>LIMÍTROFE 14</label><input type="text" id="limite14" class="form-control" readonly></div>
+                    </div>
+                </div>
+                
+
+                <div class="horizontal-line"></div>
+                <div class="section-title">ANÁLISE DO ATENDIMENTO</div>
+                <div class="horizontal-line"></div>
+
+                <!-- Campos do bloco "ANÁLISE DO ATENDIMENTO" -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="cpf_cnpj_prestador">CPF/CNPJ do Prestador de Atendimento</label>
+                            <input type="text" name="cpf_cnpj_prestador" id="cpf_cnpj_prestador" class="form-control" style="background-color: #D6EAF8;">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="nome_prestador">Nome do Prestador de Atendimento</label>
+                            <input type="text" name="nome_prestador" id="nome_prestador" class="form-control" style="background-color: #D6EAF8;">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="categoria_prestador">Categoria do Prestador de Atendimento</label>
+                            <input type="text" name="categoria_prestador" id="categoria_prestador" class="form-control" style="background-color: #D6EAF8;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="causa_garantia">Causa da Garantia de Atendimento</label>
+                            <textarea name="causa_garantia" id="causa_garantia" class="form-control" rows="4" style="background-color: #D6EAF8;"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="validacao_alcada">Validação de Alçada</label>
+                            <input type="text" name="validacao_alcada" id="validacao_alcada" class="form-control" style="background-color: #D6EAF8;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="prestadores_consultados">Prestadores Consultados na Busca por Rede de Atendimento (credenciada ou não)</label>
+                            <textarea name="prestadores_consultados" id="prestadores_consultados" class="form-control" rows="6" style="height: 150px; background-color: #D6EAF8;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="historico_atendimento">PROCEDIMENTO Possui histórico de atendimento pelo prestador indicado ou por outro da rede assistencial?</label>
+                            <textarea name="historico_atendimento" id="historico_atendimento" class="form-control" rows="6" style="height: 150px; background-color: #D6EAF8;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="horizontal-line"></div>
+                <div class="section-title">PARECER UAR/NAR</div>
+                <div class="horizontal-line"></div>
+                
+                <!-- Campo do bloco "PARECER UAR/NAR" -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <textarea name="parecer_uar_nar" id="parecer_uar_nar" class="form-control" rows="8" style="height: 200px; background-color: #D6EAF8;"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line" style="background-color: #FFD700;"></div>
+                <div class="section-title" style="background-color: #FFD700;">ASSINATURA</div>
+                <div class="horizontal-line" style="background-color: #FFD700;"></div>
+                
+                <!-- Campos do bloco "ASSINATURA" -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nome_gestor" style="background-color: #154360; color: white; padding: 5px; display: block;">Nome do Gestor da UAR/NAR</label>
+                            <input type="text" name="nome_gestor" id="nome_gestor" class="form-control" style="background-color: #D6EAF8; height: 50px;">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="cargo_gestor" style="background-color: #154360; color: white; padding: 5px; display: block;">Cargo</label>
+                            <input type="text" name="cargo_gestor" id="cargo_gestor" class="form-control" style="background-color: #D6EAF8; height: 50px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="horizontal-line" style="background-color: #FFD700;"></div>
+
+
+
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // let codigoEventoData = {};
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("codigo_evento").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento").value = procedimento;
+        });
+
+         // Função para preencher automaticamente o campo de procedimento
+         document.getElementById("evento_2").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_2").value = procedimento;
+        });
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("evento_3").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_3").value = procedimento;
+        });
+
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("evento_4").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_4").value = procedimento;
+        });
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("evento_5").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_5").value = procedimento;
+        });
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("evento_6").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_6").value = procedimento;
+        });
+
+        // Função para preencher automaticamente o campo de procedimento
+        document.getElementById("evento_7").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_7").value = procedimento;
+        });
+
+         // Função para preencher automaticamente o campo de procedimento
+         document.getElementById("evento_8").addEventListener("input", function () {
+            const codigo = this.value;
+            const procedimento = codigoEventoData[codigo] || "Não encontrado"; // Busca o procedimento ou deixa em branco
+            document.getElementById("procedimento_8").value = procedimento;
+        });
+
+        // Função para atualizar os municípios com base no estado selecionado
+        document.getElementById("uf").addEventListener("change", function () {
+            const estadoSelecionado = this.value;
+            const selectMunicipio = document.getElementById("municipio");
+            
+            // Limpar os municípios anteriores
+            selectMunicipio.innerHTML = '<option value="">Selecione o município</option>';
+
+            // Adicionar os municípios do estado selecionado
+            if (estadoSelecionado && municipiosData[estadoSelecionado]) {
+                municipiosData[estadoSelecionado].forEach(municipio => {
+                    const option = document.createElement("option");
+                    option.value = municipio;
+                    option.textContent = municipio;
+                    selectMunicipio.appendChild(option);
+                });
+            }
+        });
+
+        document.getElementById("municipio").addEventListener("change", function () {
+        const municipioSelecionado = this.value;
+        const limiteFields = 20;  // Total de campos a preencher
+
+        // Limpar campos anteriores
+        for (let i = 1; i <= limiteFields; i++) {
+            document.getElementById(`limite${i}`).value = "-";
+        }
+
+        // Verificar e preencher os municípios limítrofes
+        if (municipioSelecionado && municipiosLimitrofesData[municipioSelecionado]) {
+            const limitrofes = municipiosLimitrofesData[municipioSelecionado];
+
+            // Preencher até 20 campos com os municípios limítrofes ou "-" quando não houver
+            for (let i = 0; i < limiteFields; i++) {
+                const campo = document.getElementById(`limite${i + 1}`);
+                campo.value = limitrofes[i] || "-";
+            }
+        }
+    });
+
+        $(document).ready(function() {
+           
+            // Função para salvar os dados no LocalStorage
+            $('#salvarForm').click(function() {
+                const formData = $('#form_atendimento').serializeArray();
+                let formObject = {};
+                formData.forEach(field => formObject[field.name] = field.value);
+
+                // Gerando uma nova chave se não existir
+                let chave = parseInt(localStorage.getItem('nextChave')) || 1;
+                if (!formObject.chave) {
+                    formObject.chave = chave;
+                }
+
+                // Salvando o formulário no LocalStorage com a chave
+                localStorage.setItem(`formulario_${formObject.chave}`, JSON.stringify(formObject));
+                alert(`Formulário com chave ${formObject.chave} salvo com sucesso!`);
+
+                // Atualizando a próxima chave
+                localStorage.setItem('nextChave', chave + 1);
+            });
+
+            // Função para carregar um novo formulário (resetando os campos)
+            $('#novoForm').click(function() {
+                $('#form_atendimento')[0].reset();
+            });
+
+            // Função para limpar o formulário e o LocalStorage
+            $('#limparForm').click(function() {
+                $('#form_atendimento')[0].reset();
+                localStorage.removeItem('formulario_atendimento');
+                alert('Formulário e dados salvos foram limpos.');
+            });
+
+            // Função para Exportar PDF
+            $('#exportarPdf').click(function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                // Adiciona título ao PDF
+                doc.setFontSize(16);
+                doc.text("Formulário de Atendimento", 10, 10);
+
+                // Pega todos os dados do formulário
+                const formData = $('#form_atendimento').serializeArray();
+
+                // Adiciona cada campo e valor ao PDF
+                let linha = 20;
+                doc.setFontSize(12);
+                formData.forEach((campo, index) => {
+                    // Quebra de linha se ultrapassar a margem
+                    if (linha > 280) {
+                        doc.addPage();
+                        linha = 20;
+                    }
+
+                    doc.text(`${campo.name}: ${campo.value}`, 10, linha);
+                    linha += 10;
+                });
+
+                // Salva o PDF
+                doc.save('formulario_atendimento.pdf');
+            });
+            
+            // Função para exportar todos os dados salvos em CSV
+            $('#exportarCsv').click(function() {
+                let csvContent = "data:text/csv;charset=utf-8,";
+
+                // Obtendo todos os campos presentes no formulário
+                const fields = $('#form_atendimento').serializeArray().map(field => field.name);
+                csvContent += "Chave," + fields.join(",") + "\n";
+
+                // Percorre todas as chaves salvas no localStorage
+                for (let i = 1; i <= localStorage.getItem('nextChave'); i++) {
+                    const formData = JSON.parse(localStorage.getItem(`formulario_${i}`));
+                    if (formData) {
+                        const linha = [formData.chave];
+                        fields.forEach(field => {
+                            linha.push(formData[field] ? formData[field] : '');
+                        });
+                        csvContent += linha.join(",") + "\n";
+                    }
+                }
+
+                // Cria o link para download
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "formulario_atendimento.csv");
+                document.body.appendChild(link); // Necessário para o Firefox
+                link.click();
+            });
+
+
+            // Função para buscar formulário pela chave
+            $('#buscarChave').click(function() {
+                const chave = $('#chave').val();
+                if (chave) {
+                    const savedData = JSON.parse(localStorage.getItem(`formulario_${chave}`));
+                    if (savedData) {
+                        Object.keys(savedData).forEach(key => {
+                            $(`#${key}`).val(savedData[key]);
+                        });
+                        alert(`Formulário com chave ${chave} carregado!`);
+                    } else {
+                        alert('Formulário não encontrado para essa chave.');
+                    }
+                } else {
+                    alert('Por favor, insira uma chave para buscar.');
+                }
+            });
+
+            // Carregar os dados do formulário salvos no LocalStorage (se houver)
+            const savedData = JSON.parse(localStorage.getItem('formulario_atendimento'));
+            if (savedData) {
+                Object.keys(savedData).forEach(key => {
+                    $(`#${key}`).val(savedData[key]);
+                });
+            }
+        });
+    </script>
+
+   
+
+</body>
+</html>

@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário Completo</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+  .table-container {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; /* Permite rolagem horizontal, se necessário */
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 80%; /* Ajusta a largura da tabela */
+    font-size: 14px; /* Reduz o tamanho do texto */
+    margin: auto;
+  }
+
+  th, td {
+    border: 1px solid #ddd; /* Define bordas */
+    padding: 5px; /* Reduz o espaçamento interno */
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2; /* Cor de fundo para cabeçalho */
+    font-weight: bold;
+  }
+
+  input[type="text"], input[type="number"] {
+    font-size: 12px; /* Reduz o tamanho da fonte dos campos de entrada */
+    padding: 3px; /* Reduz o espaçamento interno dos campos */
+    width: 100%; /* Mantém os campos alinhados */
+    box-sizing: border-box; /* Garante que o padding não ultrapasse o tamanho dos campos */
+  }
+
+  tfoot {
+    font-weight: bold;
+  }
+</style>
+
     <style>
         .header {
             background-color: #004d66;
@@ -52,6 +92,7 @@
             color: gray;
         }
     </style>
+
 
  <script>
         function calculateTotals() {
@@ -342,8 +383,7 @@
                 </div>
             </div>
 
-
-            <h2 class="text-center">Tabela de Procedimentos</h2>
+<h2 class="text-center">Tabela de Procedimentos</h2>
     <div class="table-container">
         <table>
             <thead>
@@ -468,7 +508,9 @@
         </table>
         </div>
 
+    
         </form>
+
     </div>
     
 </body>
