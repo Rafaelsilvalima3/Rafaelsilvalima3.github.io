@@ -1,0 +1,30 @@
+<?php
+// Usuário e senha pré-cadastrados (administrador)
+$admin_user = "admin";
+$admin_pass = "123456";
+
+// Verifica se o formulário foi enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Valida as credenciais
+    if ($username === $admin_user && $password === $admin_pass) {
+        // Redireciona para a página principal do sistema
+        header("Location: inicio.php");
+        exit;
+    } else {
+        // Exibe mensagem de erro e link para voltar ao login
+        echo '<div style="text-align: center; font-family: Arial, sans-serif; margin-top: 20px;">
+                <p style="color: red; font-size: 16px;">Usuário ou senha inválidos!</p>
+                <a href="index.HTML" style="color: blue; text-decoration: none;">Voltar para a página de login</a>
+              </div>';
+    }
+} else {
+    // Redireciona para a página de login se o acesso for direto
+    header("Location: login.php");
+
+    exit; // Garante que o restante do script não será executado
+    
+    ?>
+

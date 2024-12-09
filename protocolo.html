@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Protocolo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        .tab {
+            margin-top: 20px;
+        }
+        .tab button {
+            padding: 10px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        .tabcontent.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sistema de Protocolo</h2>
+        <div class="tab">
+            <button onclick="openTab(event, 'formulario')">Formulário</button>
+            <button onclick="openTab(event, 'bancoDados')">Banco de Dados</button>
+        </div>
+        <div id="formulario" class="tabcontent active">
+            <form id="protocoloForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="codigo">Código do Protocolo</label>
+                    <input type="text" id="codigo" name="codigo" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="descricao">Descrição do Arquivo</label>
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="data">Data</label>
+                    <input type="date" id="data" name="data">
+                </div>
+                <div class="form-group">
+                    <label for="arquivo">Anexar Documento</label>
+                    <input type="file" id="arquivo" name="arquivo">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email para Assinatura</label>
+                    <input type="rafaelsilvalima3@gmail.com" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="gerarCodigo()">Gerar Código</button>
+                    <button type="submit">Salvar</button>
+                    <button type="button" onclick="enviarEmail()">Enviar Email</button>
+                </div>
+            </form>
+        </div>
+        <div id="bancoDados" class="tabcontent">
+            <h3>Banco de Dados</h3>
+            <ul id="listaProtocolos"></ul>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        function gerarCodigo() {
+            const codigo = 'PROTO-' + Math.floor(Math.random() * 1000000);
+            document.getElementById('codigo').value = codigo;
+        }
+
+        document.getElementById('protocoloForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const codigo = formData.get('codigo');
+            const descricao = formData.get('descricao');
+            const data = formData.get('data');
+            const arquivo = formData.get('arquivo');
+            const email = formData.get('email');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const protocolo = {
+                    codigo,
+                    descricao,
+                    data,
+                    arquivo: e.target.result,
+                    email
+                };
+
+                let protocolos = JSON.parse(localStorage.getItem('protocolos')) || [];
+                protocolos.push(protocolo);
+                localStorage.setItem('protocolos', JSON.stringify(protocolos));
+
+                alert('Protocolo salvo com sucesso!');
+                atualizarListaProtocolos();
+            };
+            reader.readAsDataURL(arquivo);
+        });
+
+        function enviarEmail() {
+            const formData = new FormData(document.getElementById('protocoloForm'));
+            const codigo = formData.get('codigo');
+            const descricao = formData.get('descricao');
+            const data = formData.get('data');
+            const arquivo = formData.get('arquivo');
+            const email = formData.get('email');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const protocolo = {
+                    codigo,
+                    descricao,
+                    data,
+                    arquivo: e.target.result,
+                    email
+                };
+
+                fetch('/enviar-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(protocolo)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Email enviado com sucesso!');
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar email:', error);
+                    alert('Erro ao enviar email.');
+                });
+            };
+            reader.readAsDataURL(arquivo);
+        }
+
+        function atualizarListaProtocolos() {
+            const listaProtocolos = document.getElementById('listaProtocolos');
+            listaProtocolos.innerHTML = '';
+            const protocolos = JSON.parse(localStorage.getItem('protocolos')) || [];
+            protocolos.forEach(protocolo => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <p><strong>Código:</strong> ${protocolo.codigo}</p>
+                    <p><strong>Descrição:</strong> ${protocolo.descricao}</p>
+                    <p><strong>Data:</strong> ${protocolo.data}</p>
+                    <p><strong>Arquivo:</strong> <a href="${protocolo.arquivo}" target="_blank">Visualizar</a></p>
+                    <p><strong>Email:</strong> ${protocolo.email}</p>
+                `;
+                listaProtocolos.appendChild(li);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', atualizarListaProtocolos);
+    </script>
+</body>
+</html>
+
+
+
+
