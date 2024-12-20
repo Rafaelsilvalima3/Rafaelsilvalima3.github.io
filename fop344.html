@@ -227,7 +227,7 @@
 
     </script>
 <script>
-       async function loadMunicipios() {
+    async function loadMunicipios() {
     const uf = document.getElementById("uf").value;
     const municipioField = document.getElementById("municipio");
     console.log("UF selecionado:", uf);
@@ -238,7 +238,7 @@
     }
 
     try {
-        const response = await fetch("municipios.json");
+        const response = await fetch("municipios.js");
         console.log("Response status:", response.status);
 
         const data = await response.json();
