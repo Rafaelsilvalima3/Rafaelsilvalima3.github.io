@@ -44,6 +44,24 @@
     font-weight: bold;
   }
 </style>
+<style>
+        .blue-banner {
+            background-color: #004d66;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .yellow-banner {
+            background-color: #ffd966;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            font-size: 1rem;
+        }
+   </style>
 
     <style>
         .header {
@@ -208,14 +226,56 @@
         }
 
     </script>
+<script>
+       async function loadMunicipios() {
+    const uf = document.getElementById("uf").value;
+    const municipioField = document.getElementById("municipio");
+    console.log("UF selecionado:", uf);
+
+    if (!uf) {
+        municipioField.innerHTML = '<option value="">Selecione o município</option>';
+        return;
+    }
+
+    try {
+        const response = await fetch("municipios.json");
+        console.log("Response status:", response.status);
+
+        const data = await response.json();
+        console.log("Dados recebidos:", data);
+
+        const municipios = data[uf] || [];
+        console.log("Municípios encontrados:", municipios);
+
+        municipioField.innerHTML = '<option value="">Selecione o município</option>';
+        municipios.forEach(municipio => {
+            const option = document.createElement("option");
+            option.value = municipio;
+            option.textContent = municipio;
+            municipioField.appendChild(option);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar municípios:", error);
+        municipioField.innerHTML = '<option value="">Erro ao carregar municípios</option>';
+    }
+}
+</script>
 
 </head>
 
 <body>
-    <div class="container mt-4">
-        <h4 class="text-center"> FOP 344 | Aprovação de Alçada da Garantia de Atendimento</h4>
-        <p class="text-center">Processo de validação de alçada para Garantia de Atendimento</p>
         
+
+    <div class="container mt-4">
+        <!-- Faixa Azul com o Título -->
+        <div class="blue-banner">
+            FOP 344 | Aprovação de Alçada da Garantia de Atendimento
+        </div>
+
+        <!-- Faixa Amarela com o Subtítulo -->
+        <div class="yellow-banner">
+            Processo de validação de alçada para Garantia de Atendimento
+        </div>
         <!-- Campo de Chave -->
         <div class="form-group">
             <label for="chaveFormulario">Chave do Formulário:</label>
@@ -247,7 +307,8 @@
                 </div>
                 <div class="form-group col-md-2">
                     <label for="uf">UF:</label>
-                    <select id="uf" class="form-control">
+                <select id="uf" class="form-control" onchange="loadMunicipios()">
+
                                 <option value="">Selecione o UF</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -280,8 +341,12 @@
                 </div>
                 <div class="form-group col-md-2">
                     <label for="municipio">Município:</label>
-                    <input type="text" class="form-control" id="municipio">
+                    <select id="municipio" class="form-control">
+                        <option value="">Selecione o município</option>
+                    </select>
                 </div>
+
+
             </div>
 
             <div class="form-row">
