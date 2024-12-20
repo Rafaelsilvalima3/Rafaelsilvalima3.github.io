@@ -153,33 +153,6 @@
 
 </script>
 <script>
-        async function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
-
-            // Adicionar título ao PDF
-            pdf.setFontSize(18);
-            pdf.text("Formulário Completo - Garantia de Atendimento", 10, 10);
-
-            // Adicionar dados do formulário
-            let y = 20; // Posição inicial
-            document.querySelectorAll('form input, form select, form textarea').forEach(input => {
-                const label = input.previousElementSibling ? input.previousElementSibling.innerText : input.id;
-                const value = input.value || "Não preenchido";
-                pdf.setFontSize(12);
-                pdf.text(`${label}: ${value}`, 10, y);
-                y += 10;
-
-                // Criar nova página se o conteúdo ultrapassar o limite
-                if (y > 280) {
-                    pdf.addPage();
-                    y = 10;
-                }
-            });
-
-            // Salvar o PDF
-            pdf.save("formulario_completo.pdf");
-        }
 
        function saveForm() {
             const key = document.getElementById("chaveFormulario").value;
@@ -226,27 +199,19 @@
         }
 
     </script>
+
+<script src="municipios.js"></script>
 <script>
-    async function loadMunicipios() {
-    const uf = document.getElementById("uf").value;
-    const municipioField = document.getElementById("municipio");
-    console.log("UF selecionado:", uf);
+    function loadMunicipios() {
+        const uf = document.getElementById("uf").value;
+        const municipioField = document.getElementById("municipio");
 
-    if (!uf) {
-        municipioField.innerHTML = '<option value="">Selecione o município</option>';
-        return;
-    }
+        if (!uf || !municipiosData[uf]) {
+            municipioField.innerHTML = '<option value="">Selecione o município</option>';
+            return;
+        }
 
-    try {
-        const response = await fetch("municipios.js");
-        console.log("Response status:", response.status);
-
-        const data = await response.json();
-        console.log("Dados recebidos:", data);
-
-        const municipios = data[uf] || [];
-        console.log("Municípios encontrados:", municipios);
-
+        const municipios = municipiosData[uf];
         municipioField.innerHTML = '<option value="">Selecione o município</option>';
         municipios.forEach(municipio => {
             const option = document.createElement("option");
@@ -254,13 +219,8 @@
             option.textContent = municipio;
             municipioField.appendChild(option);
         });
-    } catch (error) {
-        console.error("Erro ao carregar municípios:", error);
-        municipioField.innerHTML = '<option value="">Erro ao carregar municípios</option>';
     }
-}
 </script>
-
 </head>
 
 <body>
@@ -283,12 +243,15 @@
         </div>
 
         <div class="mt-3">
-            <button type="button" class="btn btn-info" onclick="loadFormByKey()">Carregar</button>
+            <button type="button" class="btn btn-info" onclick="loadFormByKey()">
+                <i class="fas fa-upload"></i> Carregar
+            </button>
             <button type="button" class="btn btn-primary" onclick="saveForm()">Salvar</button>
             <button type="reset" class="btn btn-secondary" onclick="clearForm()">Limpar</button>
-            <button type="button" class="btn btn-success" onclick="exportToPDF()">Exportar para PDF</button>
-        </div>
+            <button class="btn btn-primary" onclick="exportToPDF()">Exportar para PDF</button>
 
+        </div>
+        
         <form>
             <div class="form-group">
                 <label for="protocolo">Protocolo de Atendimento:</label>
@@ -352,23 +315,51 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="modalidade">Modalidade de Atendimento:</label>
-                    <input type="text" class="form-control" id="modalidade">
+                <select id="modalidade" class="form-control">
+                    <option value="">Selecione a modalidade</option>
+                    <option value="Encaminhamento Para Rede Credenciada">Encaminhamento Para Rede Credenciada</option>
+                    <option value="Contratação Direta">Contratação Direta</option>
+                    <option value="Reembolso Integral">Reembolso Integral</option>
+                    <option value="TFD - Rede Credenciada">TFD - Rede Credenciada</option>
+                    <option value="TFD - Rede Não Credenciada">TFD - Rede Não Credenciada</option>
+                    <option value="Cancelada">Cancelada</option>
+                </select>
+
                 </div>
                 <div class="form-group col-md-4">
                     <label for="tipoAtendimento">Tipo de Atendimento:</label>
-                    <input type="text" class="form-control" id="tipoAtendimento">
+                    <select id="tipoAtendimento" class="form-control">
+                        <option value="">Selecione o tipo de atendimento</option>
+                        <option value="Consulta">Consulta</option>
+                        <option value="Exames">Exames</option>
+                        <option value="Honorários de Cirurgia">Honorários de Cirurgia</option>
+                        <option value="Odontologia">Odontologia</option>
+                        <option value="Remoção">Remoção</option>
+                        <option value="Despesas de Internação">Despesas de Internação</option>
+                        <option value="Internação Domiciliar">Internação Domiciliar</option>
+                        <option value="Internação Psiquiátrica">Internação Psiquiátrica</option>
+                    </select>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="situacao">Situação do Atendimento:</label>
-                    <input type="text" class="form-control" id="situacao">
+                     <label for="situacaoAtendimento">Situação do Atendimento:</label>
+                    <select id="situacaoAtendimento" class="form-control">
+                        <option value="">Selecione a situação do atendimento</option>
+                        <option value="Eletivo / Urgência - atendimento a realizar">Eletivo / Urgência - atendimento a realizar</option>
+                        <option value="Urgência - atendimento já realizado">Urgência - atendimento já realizado</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="categoriaPrestador">Categoria do Prestador de Atendimento:</label>
-                    <input type="text" class="form-control" id="categoriaPrestador">
+                <select id="categoriaPrestador" class="form-control">
+                    <option value="">Selecione a categoria do prestador</option>
+                    <option value="CREDENCIADO">CREDENCIADO</option>
+                    <option value="NAO CREDENCIADO">NAO CREDENCIADO</option>
+                </select>
                 </div>
+
                 <div class="form-group col-md-6">
                     <label for="nomePrestador">Nome do Prestador de Atendimento:</label>
                     <input type="text" class="form-control" id="nomePrestador">
@@ -384,11 +375,27 @@
                     <label for="dataAtendimento">Data do Atendimento:</label>
                     <input type="date" class="form-control" id="dataAtendimento">
                 </div>
+                
+                <div class="form-group col-md-6">
+                    <label for="tipoAlcada">Tipo de Alçada:</label>
+                    <select id="tipoAlcada" class="form-control">
+                        <option value="">Selecione o tipo de alçada</option>
+                        <option value="NAR">NAR</option>
+                        <option value="UAR">UAR</option>
+                        <option value="GEARE">GEARE</option>
+                        <option value="DIREL">DIREL</option>
+                    </select>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="causa">Causa do Atendimento:</label>
-                <textarea class="form-control" id="causa" rows="3"></textarea>
+                <label for="causaAtendimento">Causa de Atendimento:</label>
+                <select id="causaAtendimento" class="form-control">
+                    <option value="">Selecione a causa do atendimento</option>
+                    <option value="Indisponibilidade de agenda em prestador credenciado dentro dos prazos da RN 259">Indisponibilidade de agenda em prestador credenciado dentro dos prazos da RN 259</option>
+                    <option value="Indisponibilidade prestador para cobrança de honorários médicos (despesas da cirurgia na rede credenciada">Indisponibilidade prestador para cobrança de honorários médicos (despesas da cirurgia na rede credenciada)</option>
+                    <option value="Ausência de prestador para atendimento conforme regras da RN 259">Ausência de prestador para atendimento conforme regras da RN 259</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -578,6 +585,26 @@
 
     </div>
     
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+    async function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const element = document.body; // Altere aqui se quiser capturar apenas uma parte da página
+
+        const canvas = await html2canvas(element, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png');
+
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('pagina.pdf');
+    }
+</script>
+
 </body>
 
 
